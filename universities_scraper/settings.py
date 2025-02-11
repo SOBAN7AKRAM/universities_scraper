@@ -86,11 +86,13 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
+PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 1200000
+
 # Add these Playwright-specific settings
 PLAYWRIGHT_BROWSER_TYPE = "chromium"
 PLAYWRIGHT_LAUNCH_OPTIONS = {
     "headless": False,
-    "timeout": 30000  # 30 seconds
+    "timeout": 60000  # 30 seconds
 }
 PLAYWRIGHT_CONTEXTS = {
     "university-scraper": {
