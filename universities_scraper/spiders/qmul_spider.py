@@ -3,11 +3,12 @@ import re
 from scrapy import Request
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
-class AruSpider(scrapy.Spider):
-    name = "aru_spider"
+class QmulSpider(scrapy.Spider):
+    name = "qmul_spider"
     
     def start_requests(self):
-        url = "https://london.aru.ac.uk/about-us/academic-staff"
+        url = "https://www.qmul.ac.uk/careers/about/staff-profiles/"
+            
         yield Request(
             url=url,
             callback=self.parse,
@@ -23,13 +24,12 @@ class AruSpider(scrapy.Spider):
         regex = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
         
         try:
-            
-            # Extract email
-            content = await page.content()
-            current_emails = set(regex.findall(content))
-            
-            for email in current_emails:
-                yield {"email": email, "university": "aru.ac.uk"}
+                await page.wait_for_timeout(2000)
+                content = await page.content()
+                current_emails = set(regex.findall(content))
+                
+                for email in current_emails:
+                    yield {"email": email, "university": "qmul.ac.uk"}
 
         finally:
             await page.close()

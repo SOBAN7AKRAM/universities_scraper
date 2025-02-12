@@ -3,11 +3,11 @@ import re
 from scrapy import Request
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
-class AruSpider(scrapy.Spider):
-    name = "aru_spider"
+class AberSpider(scrapy.Spider):
+    name = "aber_spider"
     
     def start_requests(self):
-        url = "https://london.aru.ac.uk/about-us/academic-staff"
+        url = "https://www.aber.ac.uk/en/ibers/staff-profiles/listing/az/"
         yield Request(
             url=url,
             callback=self.parse,
@@ -29,7 +29,7 @@ class AruSpider(scrapy.Spider):
             current_emails = set(regex.findall(content))
             
             for email in current_emails:
-                yield {"email": email, "university": "aru.ac.uk"}
+                yield {"email": email, "university": "aber.ac.uk"}
 
         finally:
             await page.close()
