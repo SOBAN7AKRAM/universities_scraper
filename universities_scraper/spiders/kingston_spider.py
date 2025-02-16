@@ -5,14 +5,13 @@ import os
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup  # Import BeautifulSoup
 
-class BournemouthSpider(scrapy.Spider):
-    name = "bournemouth_spider"
+class KingstonSpider(scrapy.Spider):
+    name = "kingston_spider"
     
     def __init__(self, *args, **kwargs):
-        self.start_url = "https://staffprofiles.bournemouth.ac.uk/"
-        self.current_page = 1
+        self.base_url = "https://www.kingston.ac.uk/"
         self.output_folder = "urls"
-        self.html_filename = "bournemouth.txt"
+        self.html_filename = "kingston.txt"
         os.makedirs(self.output_folder, exist_ok=True)
         
         # Clear (or create) the file at start-up
@@ -22,9 +21,9 @@ class BournemouthSpider(scrapy.Spider):
         super().__init__(*args, **kwargs)
     
     def start_requests(self):
-        url = f"browse/people/all/{self.current_page}"
+        url = f"staff/search-results/all/"
         yield Request(
-            url=urljoin(self.start_url, url),
+            url=urljoin(self.base_url, url),
             callback=self.parse,
             meta={
                 "playwright": True,
@@ -43,7 +42,7 @@ class BournemouthSpider(scrapy.Spider):
             soup = BeautifulSoup(html, "lxml")
             
             # Extract profile links using BeautifulSoup
-            profile_link_elements = soup.select("#main.ninecol.last a")
+            profile_link_elements = soup.select(".blue-button a")
             self.logger.info(f"Found {len(profile_link_elements)} profile links.")
             
             if not profile_link_elements:
@@ -55,7 +54,7 @@ class BournemouthSpider(scrapy.Spider):
             for element in profile_link_elements:
                 href = element.get("href")
                 if href:
-                    absolute_href = urljoin(self.start_url, href)
+                    absolute_href = urljoin(self.base_url, href)
                     if absolute_href not in existing_links:
                         new_links.add(absolute_href)
             
@@ -65,19 +64,6 @@ class BournemouthSpider(scrapy.Spider):
                         f.write(f"{href}\n")
                 existing_links.update(new_links)
             
-            # Handle pagination
-            self.current_page += 1
-            next_page_url = urljoin(self.start_url, f"browse/people/all/{self.current_page}")
-            yield Request(
-                url=next_page_url,
-                callback=self.parse,
-                meta={
-                    "playwright": True,
-                    "playwright_include_page": True,
-                    "playwright_context": "university-scraper",
-                },
-            )
-        
         except PlaywrightTimeoutError:
             self.logger.error("Timeout error occurred while scraping.")
         
