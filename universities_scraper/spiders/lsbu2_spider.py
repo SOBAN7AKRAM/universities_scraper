@@ -8,12 +8,12 @@ from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)  # Create a logger
 
-class Londenmet2Spider(scrapy.Spider):
-    name = "londonmet2_spider"
+class Lsbu2Spider(scrapy.Spider):
+    name = "lsbu2_spider"
 
     def __init__(self, *args, **kwargs):
         self.output_folder = "urls"
-        self.html_filename = "londonmet.txt"
+        self.html_filename = "lsbu.txt"
         self.seen_emails = set()  # Store extracted emails to avoid duplicates
 
         self.file_path = os.path.join(self.output_folder, self.html_filename)
@@ -45,14 +45,18 @@ class Londenmet2Spider(scrapy.Spider):
     
     async def extract_emails(self, response):
         page = response.meta["playwright_page"]
-        regex = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
 
         try:
             html = await page.content()
-            email = regex.findall(html)
-            if email:
-                print(email)
-                yield {"email": email[0], "university": "londonmet.ac.uk"}
+            soup = BeautifulSoup(html, "lxml")
+            element = soup.select("a[href^='mailto:']")
+            if element:
+                email = element[0].get("href")
+                email = re.sub(r"mailto:", "", email)
+                if email in self.seen_emails:
+                    return
+                self.seen_emails.add(email)
+                yield {"email": email, "university": "lsbu.ac.uk"}
                 
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")
