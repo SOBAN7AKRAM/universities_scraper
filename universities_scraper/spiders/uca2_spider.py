@@ -1,24 +1,37 @@
 import scrapy
-import re
 from scrapy import Request
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+import os
+import re
 import logging
 from bs4 import BeautifulSoup
-logger = logging.getLogger(__name__)
 
-class QubSpider(scrapy.Spider):
-    name = "qub_spider"
-    
+logger = logging.getLogger(__name__)  # Create a logger
+
+class Uca2Spider(scrapy.Spider):
+    name = "uca2_spider"
+
+    def __init__(self, *args, **kwargs):
+        self.output_folder = "urls"
+        self.html_filename = "uca.txt"
+        self.seen_emails = set()  # Store extracted emails to avoid duplicates
+
+        self.file_path = os.path.join(self.output_folder, self.html_filename)
+
+        # Read URLs from the file
+        if not os.path.exists(self.file_path):
+            self.logger.error("URL file not found. Make sure bathspa_links.txt exists.")
+            self.profile_links = []
+        else:
+            with open(self.file_path, "r", encoding="utf-8") as f:
+                self.profile_links = [line.strip() for line in f.readlines() if line.strip()]
+
+        super().__init__(*args, **kwargs)
+
     def start_requests(self):
-        """Start with the first URL and pass along the rest in meta."""
-        urls = [
-            "https://www.qub.ac.uk/schools/SchoolofBiologicalSciences/Connect/AcademicStaff/",
-            "https://www.qub.ac.uk/schools/SchoolofNursingandMidwifery/Connect/Staff/AcademicStaff/",
-            
-        ]
-        # Start with the first URL and pass the remaining URLs in meta.
-        first_url = urls[0]
-        remaining_urls = urls[1:]
+        """Visit each profile URL one by one."""
+        first_url = self.profile_links[0]
+        remaining_urls = self.profile_links[1:]
         
         yield Request(
             url=first_url,
@@ -32,16 +45,19 @@ class QubSpider(scrapy.Spider):
     
     async def extract_emails(self, response):
         page = response.meta["playwright_page"]
-        regex = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
 
         try:
-            await page.wait_for_load_state("networkidle")
             html = await page.content()
             soup = BeautifulSoup(html, "lxml")
-            current_emails = set(regex.findall(soup.get_text()))
-            for email in current_emails:
-                yield {"email": email, "university": "qub.ac.uk"}
-
+            element = soup.select("a[href^='mailto:']")
+            if element:
+                email = element[0].get("href")
+                email = re.sub(r"mailto:", "", email)
+                if email in self.seen_emails:
+                    return
+                self.seen_emails.add(email)
+                yield {"email": email, "university": "uca.ac.uk"}
+                
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")
 
