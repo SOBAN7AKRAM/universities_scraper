@@ -4,15 +4,16 @@ from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 import os
 import re
 import logging
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)  # Create a logger
 
-class Kcl2Spider(scrapy.Spider):
-    name = "kcl2_spider"
+class Uwe2Spider(scrapy.Spider):
+    name = "uwe2_spider"
 
     def __init__(self, *args, **kwargs):
         self.output_folder = "urls"
-        self.html_filename = "kcl_links.txt"
+        self.html_filename = "uwe.txt"
         self.seen_emails = set()  # Store extracted emails to avoid duplicates
 
         self.file_path = os.path.join(self.output_folder, self.html_filename)
@@ -46,17 +47,18 @@ class Kcl2Spider(scrapy.Spider):
         page = response.meta["playwright_page"]
 
         try:
-            href = await page.query_selector("a[href^='mailto:']")
-            if href:
-                email = await href.get_attribute("href")
+            html = await page.content()
+            soup = BeautifulSoup(html, "lxml")
+            element = soup.select("a[href^='mailto:']")
+            if element:
+                email = element[0].get("href")
                 email = re.sub(r"mailto:", "", email)
                 if email in self.seen_emails:
                     return
                 self.seen_emails.add(email)
-                yield {"email": email, "university": "kcl.ac.uk"}
+                yield {"email": email, "university": "uwe.ac.uk"}
                 
         
-
             # Retrieve the remaining URLs from meta and, if available, schedule the next request.
             remaining_urls = response.meta.get("remaining_urls", [])
             if remaining_urls:
@@ -77,3 +79,4 @@ class Kcl2Spider(scrapy.Spider):
 
         finally:
             await page.close()
+

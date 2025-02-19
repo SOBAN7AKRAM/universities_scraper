@@ -7,12 +7,12 @@ import logging
 
 logger = logging.getLogger(__name__)  # Create a logger
 
-class Kcl2Spider(scrapy.Spider):
-    name = "kcl2_spider"
+class Gre2Spider(scrapy.Spider):
+    name = "gre2_spider"
 
     def __init__(self, *args, **kwargs):
         self.output_folder = "urls"
-        self.html_filename = "kcl_links.txt"
+        self.html_filename = "gre.txt"
         self.seen_emails = set()  # Store extracted emails to avoid duplicates
 
         self.file_path = os.path.join(self.output_folder, self.html_filename)
@@ -53,7 +53,7 @@ class Kcl2Spider(scrapy.Spider):
                 if email in self.seen_emails:
                     return
                 self.seen_emails.add(email)
-                yield {"email": email, "university": "kcl.ac.uk"}
+                yield {"email": email, "university": "gre.ac.uk"}
                 
         
 
