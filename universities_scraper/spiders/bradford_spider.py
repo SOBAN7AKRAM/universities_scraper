@@ -5,14 +5,14 @@ import os
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
-class GlaSpider(scrapy.Spider):
-    name = "gla_spider"
+class BradfordSpider(scrapy.Spider):
+    name = "bradford_spider"
     
     def __init__(self, *args, **kwargs):
         self.output_folder = "urls"
-        self.html_filename = "gla.txt"
+        self.html_filename = "bradford.txt"
         os.makedirs(self.output_folder, exist_ok=True)
-        self.base_url= "https://www.gla.ac.uk/"
+        self.base_url= "https://www.bradford.ac.uk/"
         
         # Clear (or create) the file at start-up
         with open(os.path.join(self.output_folder, self.html_filename), "w", encoding="utf-8") as f:
@@ -23,7 +23,7 @@ class GlaSpider(scrapy.Spider):
     def start_requests(self):
         """Start with the first URL and pass along the rest in meta."""
         urls = [
-            "",
+            "https://www.bradford.ac.uk/health/our-people/",
             "https://www.bradford.ac.uk/ei/our-people/",
             "https://www.bradford.ac.uk/law/people/",
             "https://www.bradford.ac.uk/management/som-people/"
