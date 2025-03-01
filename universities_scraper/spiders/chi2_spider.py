@@ -47,19 +47,20 @@ class Chi2Spider(scrapy.Spider):
         page = response.meta["playwright_page"]
 
         try:
+           
             html = await page.content()
             soup = BeautifulSoup(html, "lxml")
             element = soup.select("a[href^='mailto:']")
             if element:
                 email = element[0].get("href")
                 email = re.sub(r"mailto:", "", email)
-                if email in self.seen_emails:
-                    return
-                self.seen_emails.add(email)
-                yield {"email": email, "university": "chi.ac.uk"}
+                if email not in self.seen_emails: 
+                    self.seen_emails.add(email)
+                    yield {"email": email, "university": "chi.ac.uk"}
                 
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")
+            pass
 
         finally:
             await page.close()
@@ -78,3 +79,4 @@ class Chi2Spider(scrapy.Spider):
                     "remaining_urls": remaining_urls,
                 },
             )
+    
