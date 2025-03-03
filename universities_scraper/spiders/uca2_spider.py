@@ -58,23 +58,25 @@ class Uca2Spider(scrapy.Spider):
                 self.seen_emails.add(email)
                 yield {"email": email, "university": "uca.ac.uk"}
                 
+        
+
+            # Retrieve the remaining URLs from meta and, if available, schedule the next request.
+            remaining_urls = response.meta.get("remaining_urls", [])
+            if remaining_urls:
+                next_url = remaining_urls[0]
+                remaining_urls = remaining_urls[1:]
+                yield Request(
+                    url=next_url,
+                    callback=self.extract_emails,
+                    meta={
+                        "playwright": True,
+                        "playwright_include_page": True,
+                        "remaining_urls": remaining_urls,
+                    },
+                )
+            
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")
 
         finally:
             await page.close()
-
-        # Retrieve the remaining URLs from meta and, if available, schedule the next request.
-        remaining_urls = response.meta.get("remaining_urls", [])
-        if remaining_urls:
-            next_url = remaining_urls[0]
-            remaining_urls = remaining_urls[1:]
-            yield Request(
-                url=next_url,
-                callback=self.extract_emails,
-                meta={
-                    "playwright": True,
-                    "playwright_include_page": True,
-                    "remaining_urls": remaining_urls,
-                },
-            )

@@ -53,10 +53,9 @@ class Bolton2Spider(scrapy.Spider):
             if element:
                 email = element[0].get("href")
                 email = re.sub(r"mailto:", "", email)
-                if email in self.seen_emails:
-                    return
-                self.seen_emails.add(email)
-                yield {"email": email, "university": "bolton.ac.uk"}
+                if email not in self.seen_emails:
+                    self.seen_emails.add(email)
+                    yield {"email": email, "university": "bolton.ac.uk"}
                 
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")

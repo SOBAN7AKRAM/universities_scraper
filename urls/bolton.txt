@@ -111,13 +111,11 @@ https://www.bolton.ac.uk/subject-areas/engineering-motorsport-and-construction
 https://www.bolton.ac.uk/jon-guy
 https://www.bolton.ac.uk/dr-joanne-smith
 https://www.bolton.ac.uk/dr-stephen-little
-tel:+4401204900600
 https://www.bolton.ac.uk/lawrence-ngoe
 https://www.bolton.ac.uk/jess-collins
 https://www.bolton.ac.uk/dr-jane-green
 https://www.bolton.ac.uk/dr-sandra-garcia-martin
 https://www.bolton.ac.uk/ged-young
-https://jobs.bolton.ac.uk/
 https://www.bolton.ac.uk/dr-lucy-caton
 https://www.bolton.ac.uk/join-us/how-to-apply-and-admissions
 https://www.bolton.ac.uk/stuart-donohoe
@@ -213,7 +211,6 @@ https://www.bolton.ac.uk/lynda-drummond
 https://www.bolton.ac.uk/alicia-danielsson
 https://www.bolton.ac.uk/professor-iqbal-singh-cbe
 https://www.bolton.ac.uk/dr-richard-jagger
-mailto:Enquiries@bolton.ac.uk
 https://www.facebook.com/UniversityofBolton/
 https://www.bolton.ac.uk/new-page-staff-profile-447
 https://www.bolton.ac.uk/kirsty-clouston
@@ -279,7 +276,6 @@ https://www.bolton.ac.uk/robert-hurst
 https://www.bolton.ac.uk/saston-arthur-kanthonga
 https://www.bolton.ac.uk/dr-mamadou-ndiaye
 https://www.bolton.ac.uk/professor-tim-bale-ma-phd
-https://knowledge.bolton.ac.uk
 https://www.bolton.ac.uk/mark-whyte
 https://www.bolton.ac.uk/ian-fazackerley
 https://www.bolton.ac.uk/ahmad-khan
@@ -295,7 +291,6 @@ https://www.bolton.ac.uk/connor-stubley
 https://www.bolton.ac.uk/deborah-page
 https://www.bolton.ac.uk/jennifer-wild
 https://www.bolton.ac.uk/dr-saima-yasmin
-https://www.boltoncollege.ac.uk/
 https://www.bolton.ac.uk/subject-areas/dental-sciences
 https://www.bolton.ac.uk/bren-cook
 https://www.bolton.ac.uk/uniasitshouldbe
@@ -397,7 +392,6 @@ https://www.bolton.ac.uk/jessica-barba
 https://www.bolton.ac.uk/faye-power
 https://www.bolton.ac.uk/ben-hughes
 https://www.bolton.ac.uk/business-gateway/
-https://knowledge.bolton.ac.uk/
 https://www.bolton.ac.uk/paul-watson
 https://www.bolton.ac.uk/dawn-fletcher-wilde
 https://www.bolton.ac.uk/gareth-hughes

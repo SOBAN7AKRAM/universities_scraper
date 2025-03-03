@@ -53,10 +53,9 @@ class Bournemouth2Spider(scrapy.Spider):
             if element:
                 email = element[0].get("href")
                 email = re.sub(r"mailto:", "", email)
-                if email in self.seen_emails:
-                    return
-                self.seen_emails.add(email)
-                yield {"email": email, "university": "bournemouth.ac.uk"}
+                if email not in self.seen_emails:
+                    self.seen_emails.add(email)
+                    yield {"email": email, "university": "bournemouth.ac.uk"}
                 
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")
@@ -78,3 +77,4 @@ class Bournemouth2Spider(scrapy.Spider):
                     "remaining_urls": remaining_urls,
                 },
             )
+        

@@ -53,28 +53,29 @@ class Kingston2Spider(scrapy.Spider):
             if element:
                 email = element[0].get("href")
                 email = re.sub(r"mailto:", "", email)
-                if email in self.seen_emails:
-                    return
-                self.seen_emails.add(email)
-                yield {"email": email, "university": "knigston.ac.uk"}
+                if email not in self.seen_emails:
+                    self.seen_emails.add(email)
+                    yield {"email": email, "university": "knigston.ac.uk"}
                 
+        
+
+            # Retrieve the remaining URLs from meta and, if available, schedule the next request.
+            remaining_urls = response.meta.get("remaining_urls", [])
+            if remaining_urls:
+                next_url = remaining_urls[0]
+                remaining_urls = remaining_urls[1:]
+                yield Request(
+                    url=next_url,
+                    callback=self.extract_emails,
+                    meta={
+                        "playwright": True,
+                        "playwright_include_page": True,
+                        "remaining_urls": remaining_urls,
+                    },
+                )
+            
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")
 
         finally:
             await page.close()
-
-        # Retrieve the remaining URLs from meta and, if available, schedule the next request.
-        remaining_urls = response.meta.get("remaining_urls", [])
-        if remaining_urls:
-            next_url = remaining_urls[0]
-            remaining_urls = remaining_urls[1:]
-            yield Request(
-                url=next_url,
-                callback=self.extract_emails,
-                meta={
-                    "playwright": True,
-                    "playwright_include_page": True,
-                    "remaining_urls": remaining_urls,
-                },
-            )
