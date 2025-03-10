@@ -53,10 +53,9 @@ class Uos2Spider(scrapy.Spider):
             if element:
                 email = element[0].get("href")
                 email = re.sub(r"mailto:", "", email)
-                if email in self.seen_emails:
-                    return
-                self.seen_emails.add(email)
-                yield {"email": email, "university": "uos.ac.uk"}
+                if email not in self.seen_emails:
+                    self.seen_emails.add(email)
+                    yield {"email": email, "university": "uos.ac.uk"}
                 
         
             # Retrieve the remaining URLs from meta and, if available, schedule the next request.

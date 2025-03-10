@@ -30,8 +30,8 @@ class Gre2Spider(scrapy.Spider):
 
     def start_requests(self):
         """Visit each profile URL one by one."""
-        first_url = self.profile_links[580]
-        remaining_urls = self.profile_links[581:]
+        first_url = self.profile_links[0]
+        remaining_urls = self.profile_links[1:]
         
         yield Request(
             url=first_url,
@@ -56,7 +56,7 @@ class Gre2Spider(scrapy.Spider):
                 if email in self.seen_emails:
                     return
                 self.seen_emails.add(email)
-                yield {"email": email, "university": "gre1.ac.uk"}
+                yield {"email": email, "university": "gre.ac.uk"}
                 
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")

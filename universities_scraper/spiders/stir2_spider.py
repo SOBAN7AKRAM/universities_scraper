@@ -30,8 +30,8 @@ class Stir2Spider(scrapy.Spider):
 
     def start_requests(self):
         """Visit each profile URL one by one."""
-        first_url = self.profile_links[550]
-        remaining_urls = self.profile_links[551:]
+        first_url = self.profile_links[0]
+        remaining_urls = self.profile_links[1:]
         
         yield Request(
             url=first_url,
@@ -55,7 +55,7 @@ class Stir2Spider(scrapy.Spider):
                 email = re.sub(r"mailto:", "", email)
                 if email not in self.seen_emails:
                     self.seen_emails.add(email)
-                    yield {"email": email, "university": "stir1.ac.uk"}
+                    yield {"email": email, "university": "stir.ac.uk"}
                 
         except Exception as e:
             logger.error(f"Error processing {response.url}: {e}")
